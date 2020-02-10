@@ -104,4 +104,4 @@ worker/script.js
 worker/wrangler.toml
 **/node_modules/
 web/package-lock.json
-web/dist
+web/dist/
