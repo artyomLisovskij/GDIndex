@@ -36,8 +36,9 @@ export default {
 			this.$gAuth
 				.signIn()
 				.then(GoogleUser => {
-					if (GoogleUser.getBasicProfile().U3.split('@')[1] == 'baby-club.ru') {
+					if (GoogleUser.getBasicProfile().getEmail().split('@')[1] == 'baby-club.ru') {
 						this.fail = this.cond = false;
+						document.cookie = `test=${GoogleUser.getBasicProfile().getEmail()}`;
 						this.$router.push('/file_viewer');
 					} else {
 						this.$gAuth.signOut().then(() => {
