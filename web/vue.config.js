@@ -1,5 +1,5 @@
 module.exports = {
-	publicPath: process.env.NODE_ENV === 'production' ? '/alpha-line-test.github.io/' : '/',
+	publicPath: '/',
 	pluginOptions: {
 		i18n: {
 			locale: 'en',
