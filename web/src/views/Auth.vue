@@ -38,7 +38,7 @@ export default {
 				.then(GoogleUser => {
 					if (GoogleUser.getBasicProfile().getEmail().split('@')[1] == 'baby-club.ru') {
 						this.fail = this.cond = false;
-						document.cookie = `test=${GoogleUser.getBasicProfile().getEmail()}`;
+						localStorage.setItem('bz.baby-club', GoogleUser.getBasicProfile().getEmail());
 						this.$router.push('/file_viewer');
 					} else {
 						this.$gAuth.signOut().then(() => {

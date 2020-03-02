@@ -252,7 +252,7 @@ export default {
 		let that = this;
 		let checkGauthLoad = setInterval(function() {
 			if (that.$gAuth.isInit) {
-				!that.$gAuth.isAuthorized ? that.$router.push('/') : that.currentEmail = document.cookie.replace(/(?:(?:^|.*;\s*)test\s*\=\s*([^;]*).*$)|^.*$/, "$1");;
+				!that.$gAuth.isAuthorized ? that.$router.push('/') : that.currentEmail = localStorage.getItem('bz.baby-club');
 				clearInterval(checkGauthLoad);
 			}
 		}, 1);
