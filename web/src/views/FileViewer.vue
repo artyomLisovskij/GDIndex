@@ -42,10 +42,9 @@
 						<v-card-text>
 							<v-treeview
 								v-model="tree"
-								:items="items"
+								:items="tree_search_data"
 								activatable
-								:search="searchfilter"
-								item-key="name"
+								item-key="id"
 								open-on-click
 								:openAll="openAll"
 							>
@@ -85,6 +84,7 @@ export default {
 			showmenu: true,
 			link: '',
 			tree: [],
+			tree_search_data: [],
 			items: [],
 			search: null,
 			loading: false,
@@ -136,6 +136,15 @@ export default {
 			}
 		}
 	},
+	watch: {
+		search() {
+			if (this.searchfilter === '') {
+				this.tree_search_data = this.items
+			} else {
+				this.upper_children(this.items)
+			}
+		}
+	},
 	methods: {
 		handleClickSignOut() {
 			this.$gAuth
@@ -149,7 +158,6 @@ export default {
 		},
 		goPath(item) {
 			if (item.file !== 'application/vnd.google-apps.folder') {
-				
 				this.link = 'https://docs.google.com/viewer?srcid=' + item.id + '&pid=explorer&efh=false&a=v&chrome=false&embedded=true';
 				if (this.windowWidth <= 500) {
 					this.toggleMenu();
@@ -171,7 +179,7 @@ export default {
 		},
 		recursion(obj) {
 			let o = obj;
-			o = this.checkAndChange(o); 
+			o = this.checkAndChange(o);
 			if (o.children) {
 				o.children.sort(function(a, b) {
 					if (a.file == 'application/vnd.google-apps.folder') {
@@ -234,6 +242,27 @@ export default {
 				});
 			}
 			return o; // return final new object
+		},
+		upper_children(obj) {
+			this.tree_search_data = []
+			this.recurеnt_upper_children(obj)
+		},
+		recurеnt_upper_children(tree, reverse = false) {
+		  	const stack = [ 
+		  		{
+					name: 'root',
+					children: tree
+				}
+			]
+
+			while (stack.length) {
+				const node = stack[reverse ? 'pop' : 'shift']()
+				
+				if (node.name.toLowerCase().indexOf(this.searchfilter.toLowerCase()) !== -1 && !("children" in node)) this.tree_search_data.push(node)
+				node.children && stack.push(...node.children)
+			}
+
+			return null
 		}
 	},
 	created() {
@@ -241,6 +270,7 @@ export default {
 		api.get('https://baby.fintech.workers.dev/baby.json')
 		.json().then((data) => {
 			this.items = this.recursion(data)
+			this.tree_search_data = this.recursion(data)
 		})
 		this.loading = false
 	},
